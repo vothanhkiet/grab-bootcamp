@@ -15,12 +15,12 @@ type Feedback struct {
 	Feedback    string
 }
 
-// FeedbackDB FeedbackDB
+// FeedbackDB FeedbackDB struct
 type FeedbackDB struct {
 	userDB map[string]*Feedback
 }
 
-// Query Query
+// Query Search feedback by passenger's ID or booking's code
 func (i *FeedbackDB) Query(passengerID int32, bookingCode string) []*Feedback {
 	ret := make([]*Feedback, 0)
 
@@ -38,14 +38,24 @@ func (i *FeedbackDB) Query(passengerID int32, bookingCode string) []*Feedback {
 	return ret
 }
 
-// Add Add
+// Add Add new feedback
 func (i *FeedbackDB) Add(data *Feedback) {
 	i.userDB[data.FeedbackID] = data
 }
 
-// FindByID FindByID
+// FindByID Find feedback by ID
 func (i *FeedbackDB) FindByID(id string) *Feedback {
+	if feedback, ok := i.userDB[id]; ok {
+		return feedback
+	}
 	return nil
+}
+
+// DeleteByID Delete feedback by ID
+func (i *FeedbackDB) DeleteByID(id string) {
+	if _, ok := i.userDB[id]; ok {
+		delete(i.userDB, id)
+	}
 }
 
 // Count Total records in datastore

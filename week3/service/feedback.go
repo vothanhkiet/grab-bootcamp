@@ -47,8 +47,15 @@ func (s *feedBackService) ListFeedBack(ctx context.Context, in *gw.ListPassenger
 	return &gw.ListPassengerFeedbackResponse{Errors: nil, Paging: &gw.Paging{Total: total, Offset: 0, Limit: total}, Data: ret}, nil
 }
 
-func (s *feedBackService) DeleteFeedback(context.Context, *gw.DeleteFeedBackRequest) (*gw.DeleteFeedBackResponse, error) {
-	return nil, nil
+func (s *feedBackService) DeleteFeedback(ctx context.Context, in *gw.DeleteFeedBackRequest) (*gw.DeleteFeedBackResponse, error) {
+	feedbacks := s.db.Query(in.GetPassengerID(), "")
+
+	ret := []string{}
+	for _, feedback := range feedbacks {
+		s.db.DeleteByID(feedback.FeedbackID)
+		ret = append(ret, feedback.FeedbackID)
+	}
+	return &gw.DeleteFeedBackResponse{FeedbackIds: ret}, nil
 }
 
 // NewFeedbackService NewFeedbackService
