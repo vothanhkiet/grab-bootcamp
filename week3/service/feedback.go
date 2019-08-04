@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	constants "week3/constants"
 	data "week3/data"
 	gw "week3/transport"
 )
@@ -15,7 +16,7 @@ func (s *feedBackService) AddFeedback(ctx context.Context, in *gw.AddPassengerFe
 	feedbacks := s.db.Query(0, in.GetFeedback().GetBookingCode())
 	if len(feedbacks) > 0 {
 		return &gw.AddPassengerFeedbackResponse{Errors: []*gw.Error{&gw.Error{
-			Code:    1,
+			Code:    constants.DuplicateFeedback,
 			Message: "Feeback for this booking has been made",
 		}}}, nil
 	}
