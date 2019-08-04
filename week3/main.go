@@ -7,6 +7,7 @@ import (
 
 	"github.com/golang/glog"
 
+	db "week3/data"
 	"week3/service"
 	gw "week3/transport"
 )
@@ -43,23 +44,7 @@ func run() error {
 		return fmt.Errorf("invalid TCP port for HTTP gateway: '%s'", cfg.HTTPPort)
 	}
 
-	// add MySQL driver specific parameter to parse date/time
-	// Drop it for another database
-	// param := "parseTime=true"
-
-	// connectionString := fmt.Sprintf("%s:%s@tcp(%s)/%s?%s",
-	// 	cfg.DatastoreDBUser,
-	// 	cfg.DatastoreDBPassword,
-	// 	cfg.DatastoreDBHost,
-	// 	cfg.DatastoreDBSchema,
-	// 	param)
-	// db, err := sql.Open("mysql", connectionString)
-	// if err != nil {
-	// 	return fmt.Errorf("failed to open database: %v", err)
-	// }
-	// defer db.Close()
-
-	api := service.NewFeedbackService()
+	api := service.NewFeedbackService(db.Repository)
 
 	go func() {
 		gw.RunGrpcServer(ctx, api, cfg.GRPCPort)

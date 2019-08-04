@@ -1,10 +1,28 @@
 syntax = "proto3";
 package transport;
 import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
 
-
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+	info: {
+		title: "Feedback service";
+		version: "1.0";
+		contact: {
+			name: "Kiet Thanh Vo";
+			url: "https://github.com/vothanhkiet/grab-bootcamp";
+			email: "vothanhkiet@gmail.com";
+        };
+    };
+    schemes: [HTTP, HTTPS];
+    consumes: "application/json";
+    produces: "application/json";
+};
 message Error {
-    int32 code = 1;
+    int32 code = 1 [
+        (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+            description: "Error code", default: "0", 
+        }
+    ];
     string message = 2;
 }
 
@@ -66,6 +84,17 @@ service FeedbackService {
         option (google.api.http) = {
             get: "/v1/feedback"
             response_body: "*"
+        };
+    }
+    rpc DeleteFeedback(DeleteFeedBackRequest) returns (DeleteFeedBackResponse) {
+        option (google.api.http) = {
+            delete: "/v1/feedback"
+            response_body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+			description: "Delete feedback";
+			summary: "Delete feedback";
+            tags: "feedback";
         };
     }
 }

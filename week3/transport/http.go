@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"path"
 	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -41,12 +42,28 @@ func grpcGateway(ctx context.Context, grpcPort string) (http.Handler, error) {
 	return mux, nil
 }
 
+func swaggerHandler(w http.ResponseWriter, r *http.Request) {
+	// if !strings.HasSuffix(r.URL.Path, ".swagger.json") {
+	// 	log.Printf("Swagger JSON not Found: %s", r.URL.Path)
+	// 	http.NotFound(w, r)
+	// 	return
+	// }
+
+	log.Printf("Serving %s", r.URL.Path)
+	p := strings.TrimPrefix(r.URL.Path, "/swagger-ui/")
+	p = path.Join("docs", p)
+	http.ServeFile(w, r, p)
+}
+
 // RunHTTPServer runs HTTP gateway
 func RunHTTPServer(ctx context.Context, grpcPort string, httpPort string) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
 	mux := http.NewServeMux()
+
+	mux.HandleFunc("/swagger-ui/", swaggerHandler)
+	// mux.Handle("/swagger-ui/", http.FileServer(http.Dir("docs")))
 	gw, err := grpcGateway(ctx, grpcPort)
 	if err != nil {
 		return err

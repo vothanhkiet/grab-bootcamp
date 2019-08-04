@@ -65,6 +65,26 @@ func request_FeedbackService_ListFeedBack_0(ctx context.Context, marshaler runti
 
 }
 
+var (
+	filter_FeedbackService_DeleteFeedback_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
+func request_FeedbackService_DeleteFeedback_0(ctx context.Context, marshaler runtime.Marshaler, client FeedbackServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq DeleteFeedBackRequest
+	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FeedbackService_DeleteFeedback_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.DeleteFeedback(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
 // RegisterFeedbackServiceHandlerFromEndpoint is same as RegisterFeedbackServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
 func RegisterFeedbackServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
@@ -143,6 +163,26 @@ func RegisterFeedbackServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 
 	})
 
+	mux.Handle("DELETE", pattern_FeedbackService_DeleteFeedback_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_FeedbackService_DeleteFeedback_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_FeedbackService_DeleteFeedback_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -150,10 +190,14 @@ var (
 	pattern_FeedbackService_AddFeedback_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "feedback"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_FeedbackService_ListFeedBack_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "feedback"}, "", runtime.AssumeColonVerbOpt(true)))
+
+	pattern_FeedbackService_DeleteFeedback_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "feedback"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
 	forward_FeedbackService_AddFeedback_0 = runtime.ForwardResponseMessage
 
 	forward_FeedbackService_ListFeedBack_0 = runtime.ForwardResponseMessage
+
+	forward_FeedbackService_DeleteFeedback_0 = runtime.ForwardResponseMessage
 )
