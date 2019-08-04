@@ -7,7 +7,7 @@ func init() {
 	Repository = &FeedbackDB{userDB: make(map[string]*Feedback)}
 }
 
-// Feedback Feedback
+// Feedback Feedback struct
 type Feedback struct {
 	FeedbackID  string
 	BookingCode string

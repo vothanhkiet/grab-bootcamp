@@ -43,12 +43,6 @@ func grpcGateway(ctx context.Context, grpcPort string) (http.Handler, error) {
 }
 
 func swaggerHandler(w http.ResponseWriter, r *http.Request) {
-	// if !strings.HasSuffix(r.URL.Path, ".swagger.json") {
-	// 	log.Printf("Swagger JSON not Found: %s", r.URL.Path)
-	// 	http.NotFound(w, r)
-	// 	return
-	// }
-
 	log.Printf("Serving %s", r.URL.Path)
 	p := strings.TrimPrefix(r.URL.Path, "/swagger-ui/")
 	p = path.Join("docs", p)

@@ -10,7 +10,7 @@ type feedBackService struct {
 	db *data.FeedbackDB
 }
 
-// AddFeedback
+// AddFeedback Add new feedback
 func (s *feedBackService) AddFeedback(ctx context.Context, in *gw.AddPassengerFeedbackRequest) (*gw.AddPassengerFeedbackResponse, error) {
 	feedbacks := s.db.Query(0, in.GetFeedback().GetBookingCode())
 	if len(feedbacks) > 0 {
@@ -29,7 +29,7 @@ func (s *feedBackService) AddFeedback(ctx context.Context, in *gw.AddPassengerFe
 	return &gw.AddPassengerFeedbackResponse{Errors: []*gw.Error{}}, nil
 }
 
-// ListFeedBack
+// ListFeedBack List all feedbacks belong to passengers
 func (s *feedBackService) ListFeedBack(ctx context.Context, in *gw.ListPassengerFeedbackRequest) (*gw.ListPassengerFeedbackResponse, error) {
 	total := s.db.Count()
 	feedbacks := s.db.Query(in.GetPassengerID(), in.GetBookingCode())
@@ -47,6 +47,7 @@ func (s *feedBackService) ListFeedBack(ctx context.Context, in *gw.ListPassenger
 	return &gw.ListPassengerFeedbackResponse{Errors: nil, Paging: &gw.Paging{Total: total, Offset: 0, Limit: total}, Data: ret}, nil
 }
 
+// DeleteFeedback Delete feedback by passenger code
 func (s *feedBackService) DeleteFeedback(ctx context.Context, in *gw.DeleteFeedBackRequest) (*gw.DeleteFeedBackResponse, error) {
 	feedbacks := s.db.Query(in.GetPassengerID(), "")
 
