@@ -20,6 +20,7 @@ func (s *feedBackService) AddFeedback(ctx context.Context, in *gw.AddPassengerFe
 		}}}, nil
 	}
 
+	// Map to DB model
 	s.db.Add(&data.Feedback{
 		FeedbackID:  in.GetFeedback().GetFeedbackID(),
 		BookingCode: in.GetFeedback().GetBookingCode(),
@@ -59,7 +60,7 @@ func (s *feedBackService) DeleteFeedback(ctx context.Context, in *gw.DeleteFeedB
 	return &gw.DeleteFeedBackResponse{FeedbackIds: ret}, nil
 }
 
-// NewFeedbackService NewFeedbackService
+// NewFeedbackService Create new FeedbackService instance
 func NewFeedbackService(db *data.FeedbackDB) gw.FeedbackServiceServer {
 	return &feedBackService{db: db}
 }

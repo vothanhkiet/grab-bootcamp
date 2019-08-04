@@ -14,12 +14,8 @@ import (
 
 // Config is configuration for Server
 type Config struct {
-	GRPCPort   string
-	HTTPPort   string
-	DBHost     string
-	DBUser     string
-	DBPassword string
-	DBName     string
+	GRPCPort string
+	HTTPPort string
 }
 
 func run() error {
@@ -30,10 +26,6 @@ func run() error {
 	var cfg Config
 	flag.StringVar(&cfg.GRPCPort, "grpc", "4000", "gRPC port to bind")
 	flag.StringVar(&cfg.HTTPPort, "http", "3000", "HTTP port to bind")
-	flag.StringVar(&cfg.DBHost, "host", "", "Database host")
-	flag.StringVar(&cfg.DBUser, "user", "", "Database user")
-	flag.StringVar(&cfg.DBPassword, "password", "", "Database password")
-	flag.StringVar(&cfg.DBName, "db", "", "Database name")
 	flag.Parse()
 
 	if len(cfg.GRPCPort) == 0 {
