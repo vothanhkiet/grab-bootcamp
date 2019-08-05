@@ -20,6 +20,19 @@ func (s *feedBackService) AddFeedback(ctx context.Context, in *gw.AddPassengerFe
 			Message: "Feeback for this booking has been made",
 		}}}, nil
 	}
+	errors := make([]*gw.Error, 0)
+	if in.GetFeedback().GetFeedbackID() == "" {
+		errors = append(errors, &gw.Error{Code: constants.InvalidFeedbackID, Message: "Feedback's ID can not empty"})
+	}
+	if in.GetFeedback().GetBookingCode() == "" {
+		errors = append(errors, &gw.Error{Code: constants.InvalidBookingCode, Message: "Booking's Code can not empty"})
+	}
+	if in.GetFeedback().GetPassengerID() < 1 {
+		errors = append(errors, &gw.Error{Code: constants.InvalidBookingCode, Message: "Passenger's ID can not less than or equal zero"})
+	}
+	if len(errors) > 0 {
+		return &gw.AddPassengerFeedbackResponse{Errors: errors}, nil
+	}
 
 	// Map to DB model
 	s.db.Add(&data.Feedback{
