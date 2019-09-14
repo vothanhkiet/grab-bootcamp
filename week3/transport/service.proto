@@ -18,21 +18,44 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
     produces: "application/json";
 };
 message Error {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+		json_schema: {
+			title: "Error"
+			description: "Error's detail"
+			required: ["code", "message"]
+		}
+	};
     int32 code = 1 [
         (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
-            description: "Error code", default: "0", 
+            description: "Error code", 
+            default: "0", 
         }
     ];
-    string message = 2;
+    string message = 2 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+        description: "Error's detail"
+    }];
 }
 
 message Paging {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+		json_schema: {
+			title: "Paging"
+			description: "Paging meta"
+			required: ["total", "offset", "limit"]
+		}
+	};
     int32 total = 1;
     int32 offset = 2;
     int32 limit = 3;
 }
 
 message PassengerFeedback {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+		json_schema: {
+			title: "PassengerFeedbackRequest"
+			description: "Passenger feedback request"
+		}
+	};
     string feedbackID = 1;
     string bookingCode = 2;
     // Should be string?
@@ -41,14 +64,32 @@ message PassengerFeedback {
 }
 
 message AddPassengerFeedbackRequest {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+		json_schema: {
+			title: "AddPassengerFeedbackRequest"
+			description: "AddPassengerFeedbackRequest"
+		}
+	};
     PassengerFeedback feedback = 1;
 }
 
 message AddPassengerFeedbackResponse {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "AddPassengerFeedbackResponse"
+            description: "AddPassengerFeedbackResponse"
+        }
+    };
     repeated Error errors = 1;
 }
 
 message ListPassengerFeedbackRequest {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "ListPassengerFeedbackRequest"
+            description: "ListPassengerFeedbackRequest"
+        }
+    };
     int32 limit = 1;
     int32 offset = 2;
     string bookingCode = 3;
@@ -56,16 +97,37 @@ message ListPassengerFeedbackRequest {
 }
 
 message ListPassengerFeedbackResponse {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "ListPassengerFeedbackResponse"
+            description: "ListPassengerFeedbackResponse"
+        }
+    };
     repeated Error errors = 1;
     Paging paging = 2;
     repeated PassengerFeedback data = 3;
 }
 
 message DeleteFeedBackRequest {
-    int32 passengerID = 4;
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "DeleteFeedBackRequest"
+            description: "DeleteFeedBackRequest"
+        }
+    };
+    int32 passengerID = 4 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+        pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}", 
+        min_length: 1
+    }];
 }
 
 message DeleteFeedBackResponse {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "DeleteFeedBackResponse"
+            description: "DeleteFeedBackResponse"
+        }
+    };
     repeated Error errors = 1;
     repeated string feedbackIds = 2;
 }
@@ -92,8 +154,8 @@ service FeedbackService {
             response_body: "*"
         };
         option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
-			description: "Delete feedback";
-			summary: "Delete feedback";
+            description: "Delete feedback";
+            summary: "Delete feedback";
             tags: "feedback";
         };
     }

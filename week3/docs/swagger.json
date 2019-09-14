@@ -125,7 +125,9 @@
             "$ref": "#/definitions/transportError"
           }
         }
-      }
+      },
+      "description": "AddPassengerFeedbackResponse",
+      "title": "AddPassengerFeedbackResponse"
     },
     "transportDeleteFeedBackResponse": {
       "type": "object",
@@ -142,7 +144,9 @@
             "type": "string"
           }
         }
-      }
+      },
+      "description": "DeleteFeedBackResponse",
+      "title": "DeleteFeedBackResponse"
     },
     "transportError": {
       "type": "object",
@@ -154,9 +158,16 @@
           "description": "Error code"
         },
         "message": {
-          "type": "string"
+          "type": "string",
+          "description": "Error's detail"
         }
-      }
+      },
+      "description": "Error's detail",
+      "title": "Error",
+      "required": [
+        "code",
+        "message"
+      ]
     },
     "transportListPassengerFeedbackResponse": {
       "type": "object",
@@ -176,7 +187,9 @@
             "$ref": "#/definitions/transportPassengerFeedback"
           }
         }
-      }
+      },
+      "description": "ListPassengerFeedbackResponse",
+      "title": "ListPassengerFeedbackResponse"
     },
     "transportPaging": {
       "type": "object",
@@ -193,7 +206,14 @@
           "type": "integer",
           "format": "int32"
         }
-      }
+      },
+      "description": "Paging meta",
+      "title": "Paging",
+      "required": [
+        "total",
+        "offset",
+        "limit"
+      ]
     },
     "transportPassengerFeedback": {
       "type": "object",
@@ -212,7 +232,9 @@
         "feedback": {
           "type": "string"
         }
-      }
+      },
+      "description": "Passenger feedback request",
+      "title": "PassengerFeedbackRequest"
     }
   }
 }
