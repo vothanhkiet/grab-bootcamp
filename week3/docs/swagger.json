@@ -1,0 +1,234 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Feedback service",
+    "version": "1.0",
+    "contact": {
+      "name": "Kiet Thanh Vo",
+      "url": "https://github.com/vothanhkiet/grab-bootcamp",
+      "email": "vothanhkiet@gmail.com"
+    }
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/feedback": {
+      "get": {
+        "operationId": "ListFeedBack",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/transportListPassengerFeedbackResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "bookingCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "passengerID",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "FeedbackService"
+        ]
+      },
+      "delete": {
+        "summary": "Delete feedback",
+        "description": "Delete feedback",
+        "operationId": "DeleteFeedback",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/transportDeleteFeedBackResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "passengerID",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "feedback"
+        ]
+      },
+      "post": {
+        "operationId": "AddFeedback",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/transportAddPassengerFeedbackResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/transportPassengerFeedback"
+            }
+          }
+        ],
+        "tags": [
+          "FeedbackService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "transportAddPassengerFeedbackResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/transportError"
+          }
+        }
+      },
+      "description": "AddPassengerFeedbackResponse",
+      "title": "AddPassengerFeedbackResponse"
+    },
+    "transportDeleteFeedBackResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "$ref": "#/definitions/transportError"
+        },
+        "feedbackIds": {
+          "type": "string"
+        }
+      },
+      "description": "DeleteFeedBackResponse",
+      "title": "DeleteFeedBackResponse"
+    },
+    "transportError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "default": "0",
+          "description": "Error code"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error's detail"
+        }
+      },
+      "description": "Error's detail",
+      "title": "Error",
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "transportListPassengerFeedbackResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/transportError"
+          }
+        },
+        "paging": {
+          "$ref": "#/definitions/transportPaging"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/transportPassengerFeedback"
+          }
+        }
+      },
+      "description": "ListPassengerFeedbackResponse",
+      "title": "ListPassengerFeedbackResponse"
+    },
+    "transportPaging": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "Paging meta",
+      "title": "Paging",
+      "required": [
+        "total",
+        "offset",
+        "limit"
+      ]
+    },
+    "transportPassengerFeedback": {
+      "type": "object",
+      "properties": {
+        "feedbackID": {
+          "type": "string"
+        },
+        "bookingCode": {
+          "type": "string"
+        },
+        "passengerID": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Should be string?"
+        },
+        "feedback": {
+          "type": "string"
+        }
+      },
+      "description": "Passenger feedback request",
+      "title": "PassengerFeedbackRequest"
+    }
+  }
+}

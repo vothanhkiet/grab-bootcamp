@@ -1,0 +1,164 @@
+syntax = "proto3";
+package transport;
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+	info: {
+		title: "Feedback service";
+		version: "1.0";
+		contact: {
+			name: "Kiet Thanh Vo";
+			url: "https://github.com/vothanhkiet/grab-bootcamp";
+			email: "vothanhkiet@gmail.com";
+        };
+    };
+    schemes: [HTTP, HTTPS];
+    consumes: "application/json";
+    produces: "application/json";
+};
+message Error {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+		json_schema: {
+			title: "Error"
+			description: "Error's detail"
+			required: ["code", "message"]
+		}
+	};
+    int32 code = 1 [
+        (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+            description: "Error code", 
+            default: "0", 
+        }
+    ];
+    string message = 2 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+        description: "Error's detail"
+    }];
+}
+
+message Paging {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+		json_schema: {
+			title: "Paging"
+			description: "Paging meta"
+			required: ["total", "offset", "limit"]
+		}
+	};
+    int32 total = 1;
+    int32 offset = 2;
+    int32 limit = 3;
+}
+
+message PassengerFeedback {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+		json_schema: {
+			title: "PassengerFeedbackRequest"
+			description: "Passenger feedback request"
+		}
+	};
+    string feedbackID = 1;
+    string bookingCode = 2;
+    // Should be string?
+    int32 passengerID = 3;
+    string feedback    = 4;
+}
+
+message AddPassengerFeedbackRequest {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+		json_schema: {
+			title: "AddPassengerFeedbackRequest"
+			description: "AddPassengerFeedbackRequest"
+		}
+	};
+    PassengerFeedback feedback = 1;
+}
+
+message AddPassengerFeedbackResponse {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "AddPassengerFeedbackResponse"
+            description: "AddPassengerFeedbackResponse"
+        }
+    };
+    repeated Error errors = 1;
+}
+
+message ListPassengerFeedbackRequest {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "ListPassengerFeedbackRequest"
+            description: "ListPassengerFeedbackRequest"
+        }
+    };
+    int32 limit = 1;
+    int32 offset = 2;
+    string bookingCode = 3;
+    int32 passengerID = 4;
+}
+
+message ListPassengerFeedbackResponse {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "ListPassengerFeedbackResponse"
+            description: "ListPassengerFeedbackResponse"
+        }
+    };
+    repeated Error errors = 1;
+    Paging paging = 2;
+    repeated PassengerFeedback data = 3;
+}
+
+message DeleteFeedBackRequest {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "DeleteFeedBackRequest"
+            description: "DeleteFeedBackRequest"
+        }
+    };
+    int32 passengerID = 4 [(grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+        pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}", 
+        min_length: 1
+    }];
+}
+
+message DeleteFeedBackResponse {
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_schema) = {
+        json_schema: {
+            title: "DeleteFeedBackResponse"
+            description: "DeleteFeedBackResponse"
+        }
+    };
+    oneof ret {
+        Error errors = 1;
+        string feedbackIds = 2;
+    }
+}
+
+
+
+service FeedbackService {
+    rpc AddFeedback(AddPassengerFeedbackRequest) returns (AddPassengerFeedbackResponse) {
+        option (google.api.http) = {
+            post: "/v1/feedback"
+            body: "feedback"
+            response_body: "*"
+        };
+    }
+    rpc ListFeedBack(ListPassengerFeedbackRequest) returns (ListPassengerFeedbackResponse) {
+        option (google.api.http) = {
+            get: "/v1/feedback"
+            response_body: "*"
+        };
+    }
+    rpc DeleteFeedback(DeleteFeedBackRequest) returns (DeleteFeedBackResponse) {
+        option (google.api.http) = {
+            delete: "/v1/feedback"
+            response_body: "*"
+        };
+        option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+            description: "Delete feedback";
+            summary: "Delete feedback";
+            tags: "feedback";
+        };
+    }
+}
