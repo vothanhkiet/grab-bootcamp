@@ -128,8 +128,10 @@ message DeleteFeedBackResponse {
             description: "DeleteFeedBackResponse"
         }
     };
-    repeated Error errors = 1;
-    repeated string feedbackIds = 2;
+    oneof ret {
+        Error errors = 1;
+        string feedbackIds = 2;
+    }
 }
 
 
